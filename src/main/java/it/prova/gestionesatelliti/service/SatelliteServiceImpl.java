@@ -12,7 +12,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.prova.gestionesatelliti.exceptions.SatelliteGiaLanciatoException;
 import it.prova.gestionesatelliti.exceptions.SatelliteInOrbitaException;
+import it.prova.gestionesatelliti.exceptions.SatelliteNonDisattivatoException;
 import it.prova.gestionesatelliti.exceptions.SatelliteRientratoException;
 import it.prova.gestionesatelliti.model.Satellite;
 import it.prova.gestionesatelliti.model.StatoSatellite;
@@ -51,6 +53,13 @@ public class SatelliteServiceImpl implements SatelliteService{
 	@Override
 	@Transactional
 	public void rimuovi(Long id) {
+		Satellite satelliteDaRimuovere = repository.findById(id).get();
+		if(satelliteDaRimuovere.getDataDiLancio() != null && satelliteDaRimuovere.getDataDiRientro() == null) {
+			throw new SatelliteGiaLanciatoException("Impossibile rimuovere il satellite: è già stato lanciato e non è ancora rientrato");
+		}
+		if(satelliteDaRimuovere.getDataDiRientro() != null && satelliteDaRimuovere.getStato() != StatoSatellite.DISATTIVATO) {
+			throw new SatelliteNonDisattivatoException("Impossibile rimuovere il satellite: non è stato ancora disattivato");
+		}
 		repository.deleteById(id);
 	}
 
@@ -104,21 +113,21 @@ public class SatelliteServiceImpl implements SatelliteService{
 		satelliteDaFarRientrare.setStato(StatoSatellite.DISATTIVATO);
 	}
 
-//	@Override
-//	@Transactional
-//	public List<Satellite> trovaSatellitiLanciatiAPartireDa(Date dataInput) {
-//		return repository.findByDataDiLancioAfter(dataInput);
-//	}
-//
-//	@Override
-//	@Transactional
-//	public List<Satellite> trovaSatellitiDisattivatiNonRientrati(StatoSatellite statoInput) {
-//		return repository.findByStatoIsAndDataDiRientroNull(statoInput);
-//	}
-//
-//	@Override
-//	@Transactional
-//	public List<Satellite> trovaSatellitiFissiLanciatiAPartireDa(StatoSatellite statoInput, Date dataInput) {
-//		return repository.findByStatoIsAndDataDiLancioAfter(statoInput, dataInput);
-//	}
+	@Override
+	@Transactional
+	public List<Satellite> trovaSatellitiLanciatiPrimaDi(Date dataInput) {
+		return repository.findByDataDiLancioBefore(dataInput);
+	}
+
+	@Override
+	@Transactional
+	public List<Satellite> trovaSatellitiDisattivatiNonRientrati(StatoSatellite statoInput) {
+		return repository.findByStatoIsAndDataDiRientroNull(statoInput);
+	}
+
+	@Override
+	@Transactional
+	public List<Satellite> trovaSatellitiFissiLanciatiPrimaDi(StatoSatellite statoInput, Date dataInput) {
+		return repository.findByStatoIsAndDataDiLancioBefore(statoInput, dataInput);
+	}
 }

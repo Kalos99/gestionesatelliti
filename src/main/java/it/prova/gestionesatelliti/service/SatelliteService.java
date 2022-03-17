@@ -1,5 +1,6 @@
 package it.prova.gestionesatelliti.service;
 
+import java.util.Date;
 //import java.util.Date;
 import java.util.List;
 
@@ -23,10 +24,10 @@ public interface SatelliteService {
 	public void lancia(Long id);
 	
 	public void rientra(Long id);
-//	
-//	public List<Satellite> trovaSatellitiLanciatiAPartireDa(Date dataInput);
-//	
-//	public List<Satellite> trovaSatellitiDisattivatiNonRientrati(StatoSatellite statoInput);
-//	
-//	public List<Satellite> trovaSatellitiFissiLanciatiAPartireDa(StatoSatellite statoInput, Date dataInput);
+	
+	public List<Satellite> trovaSatellitiLanciatiPrimaDi(Date dataInput);
+	
+	public List<Satellite> trovaSatellitiDisattivatiNonRientrati(StatoSatellite statoInput);
+	
+	public List<Satellite> trovaSatellitiFissiLanciatiPrimaDi(StatoSatellite statoInput, Date dataInput);
 }
