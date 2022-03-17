@@ -64,11 +64,11 @@
 												<a class="btn btn-outline-danger btn-sm" href="${pageContext.request.contextPath}/satellite/delete/${satelliteItem.id }">Delete</a>
 												<c:choose>
 												    <c:when test="${satelliteItem.dataDiLancio == null}">
-												        <a class="btn  btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/satellite/lancia/${satelliteItem.id }">Lancia</a>
+												        <a class="btn  btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/satellite/preparalancio/${satelliteItem.id }">Lancia</a>
 												    </c:when>    
 												    <c:otherwise>
 												        <c:if test="${satelliteItem.dataDiRientro == null}">
-												        	<a class="btn  btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/satellite/rientra/${satelliteItem.id }">Rientra</a>
+												        	<a class="btn  btn-sm btn-outline-secondary" href="${pageContext.request.contextPath}/satellite/prepararientro/${satelliteItem.id }">Rientra</a>
 												    </c:if>
 												    </c:otherwise>
 												</c:choose>

@@ -12,6 +12,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.prova.gestionesatelliti.exceptions.SatelliteInOrbitaException;
+import it.prova.gestionesatelliti.exceptions.SatelliteRientratoException;
 import it.prova.gestionesatelliti.model.Satellite;
 import it.prova.gestionesatelliti.model.StatoSatellite;
 import it.prova.gestionesatelliti.repository.SatelliteRepository;
@@ -78,6 +80,28 @@ public class SatelliteServiceImpl implements SatelliteService{
 		};
 
 		return repository.findAll(specificationCriteria);
+	}
+
+	@Override
+	@Transactional
+	public void lancia(Long id) {
+		Satellite satelliteDaLanciare = repository.findById(id).get();
+		if(satelliteDaLanciare.getDataDiLancio() != null) {
+			throw new SatelliteInOrbitaException("Il satellite è già stato lanciato");
+		}
+		satelliteDaLanciare.setDataDiLancio(new Date());
+		satelliteDaLanciare.setStato(StatoSatellite.IN_MOVIMENTO);
+	}
+
+	@Override
+	@Transactional
+	public void rientra(Long id) {
+		Satellite satelliteDaFarRientrare = repository.findById(id).get();
+		if(satelliteDaFarRientrare.getDataDiRientro() != null) {
+			throw new SatelliteRientratoException("Il satellite è già rientrato");
+		}
+		satelliteDaFarRientrare.setDataDiRientro(new Date());
+		satelliteDaFarRientrare.setStato(StatoSatellite.DISATTIVATO);
 	}
 
 //	@Override

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -75,5 +76,31 @@ public class SatelliteController {
 	public String show(@PathVariable(required = true) Long idSatellite, Model model) {
 		model.addAttribute("show_satellite_attr", satelliteService.caricaSingoloElemento(idSatellite));
 		return "satellite/show";
+	}
+	
+	@GetMapping("/preparalancio/{idSatellite}")
+	public String preparalancio(@PathVariable(required = true) Long idSatellite, Model model) {
+		model.addAttribute("prepara_lancio_satellite_attr", satelliteService.caricaSingoloElemento(idSatellite));
+		return "satellite/preparalancio";
+	}
+	
+	@PostMapping("/lancia")
+	public String lancia(@RequestParam(required = true) Long idSatellite, RedirectAttributes redirectAttrs) {
+		satelliteService.lancia(idSatellite);
+		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
+		return "redirect:/satellite";
+	}
+	
+	@GetMapping("/prepararientro/{idSatellite}")
+	public String prepararientro(@PathVariable(required = true) Long idSatellite, Model model) {
+		model.addAttribute("prepara_rientro_satellite_attr", satelliteService.caricaSingoloElemento(idSatellite));
+		return "satellite/prepararientro";
+	}
+	
+	@PostMapping("/rientra")
+	public String rientra(@RequestParam(required = true) Long idSatellite, RedirectAttributes redirectAttrs) {
+		satelliteService.rientra(idSatellite);
+		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
+		return "redirect:/satellite";
 	}
 }

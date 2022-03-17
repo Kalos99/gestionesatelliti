@@ -19,6 +19,10 @@ public interface SatelliteService {
 	public void rimuovi(Long id);
 	
 	public List<Satellite> findByExample(Satellite example);
+	
+	public void lancia(Long id);
+	
+	public void rientra(Long id);
 //	
 //	public List<Satellite> trovaSatellitiLanciatiAPartireDa(Date dataInput);
 //	
